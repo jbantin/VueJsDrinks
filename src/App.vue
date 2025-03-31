@@ -1,64 +1,88 @@
 <template>
-  <Header @theme-changed="handleThemeChange" />
-  <router-view />
+  <div id="app">
+    <Header />
+    <router-view v-slot="{ Component }">
+      <transition name="page-transition" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
 </template>
 
 <script>
 import Header from './components/Header.vue';
 
 export default {
-  components: { Header },
-  methods: {
-    handleThemeChange(isDarkMode) {
-      // You can do additional app-wide theme handling here if needed
-      console.log('Theme changed to:', isDarkMode ? 'dark' : 'light');
-    }
+  name: 'App',
+  components: {
+    Header
   }
 }
 </script>
+
 <style>
-/* Global dark mode styles */
+:root {
+  --primary-color: #ff6b6b;
+  --primary-light: #ffaaa5;
+  --primary-dark: #d14d4d;
+  --accent-color: #4ecdc4;
+  --light-bg: #eeeeee;
+  --dark-bg: #18191a;
+  --dark-card: #242526;
+  --dark-hover: #323436;
+  --light-text: #f0f0f0;
+  --dark-text: #333;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --dark-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  --border-radius: 12px;
+}
+
 body {
-  transition: background-color 0.3s ease, color 0.2s ease;
+  font-family: 'Inter', 'Segoe UI', Roboto, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--light-bg);
+  color: var(--dark-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: var(--dark-bg);
+  color: var(--light-text);
 }
 
 body.dark-mode .search-input {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
+  background-color: var(--dark-card);
+  color: var(--light-text);
   border-color: #444;
 }
 
 body.dark-mode .recipeItemContainer {
-  background-color: #1e1e1e;
-  border-color: #333;
+  background-color: var(--dark-card);
+  border-color: #444;
 }
 
 body.dark-mode .drink-name {
-  color: #e0e0e0;
+  color: var(--light-text);
 }
 
 body.dark-mode .drink-category {
-  background-color: #333;
-  color: #bbb;
+  background-color: #3a3b3c;
+  color: #ddd;
 }
 
 body.dark-mode .no-results,
 body.dark-mode .start-message {
-  background-color: #1e1e1e;
+  background-color: var(--dark-card);
   color: #bbb;
 }
 
 body.dark-mode header {
-  background-color: #333;
+  background-color: var(--dark-card);
 }
 
 body.dark-mode .title {
-  color: #e0e0e0;
+  color: var(--light-text);
 }
 
 body.dark-mode .back-button {
@@ -66,14 +90,26 @@ body.dark-mode .back-button {
 }
 
 body.dark-mode .badge {
-  background-color: #444;
+  background-color: #3a3b3c;
 }
 
 body.dark-mode .drink-detail {
-  background-color: #1e1e1e;
+  background-color: var(--dark-card);
 }
 
 body.dark-mode .drink-header {
-  background-color: #252525;
+  background-color: #323436;
+}
+
+/* Page transitions */
+.page-transition-enter-active,
+.page-transition-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page-transition-enter-from,
+.page-transition-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
 }
 </style>

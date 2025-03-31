@@ -2,7 +2,9 @@
     <div class="recipe-item-wrapper">
         <router-link :to="{ name: 'DrinkDetail', params: { id: drink.idDrink } }" class="recipe-link">
             <div class="recipeItemContainer">
-                <img :src="drink.strDrinkThumb" class="recipe-image">
+                <div class="image-container">
+                    <img :src="drink.strDrinkThumb" class="recipe-image" alt="Cocktail image">
+                </div>
                 <div class="right-container">
                     <div class="drink-name">{{ drink.strDrink }}</div>
                     <div class="drink-category">{{ drink.strCategory }}</div>
@@ -10,17 +12,21 @@
             </div>
         </router-link>
         <button @click="toggleFavorite" class="favorite-button" :class="{ 'is-favorite': isFavorite }">
-            <span v-if="isFavorite">★</span>
-            <span v-else>☆</span>
+            <svg class="favorite-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
         </button>
     </div>
 </template>
-
 <script>
 export default {
     name: 'RecipeItem',
     props: {
-        drink: Object
+        drink: {
+            type: Object,
+            required: true
+        }
     },
     data() {
         return {
@@ -64,10 +70,14 @@ export default {
     }
 }
 </script>
-
 <style scoped>
 .recipe-item-wrapper {
     position: relative;
+    transition: transform 0.3s ease;
+}
+
+.recipe-item-wrapper:hover {
+    transform: translateY(-5px);
 }
 
 .recipe-link {
@@ -77,83 +87,93 @@ export default {
 }
 
 .recipeItemContainer {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 12px;
-    border-radius: 8px;
+    border: none;
+    padding: 0;
+    border-radius: var(--border-radius);
+    overflow: hidden;
     display: flex;
-    gap: 16px;
+    flex-direction: column;
     background-color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow);
     transition: all 0.3s ease;
+    height: 100%;
 }
 
-.recipeItemContainer:hover {
-    background-color: #f9f6f4;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.image-container {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
 }
 
 .recipe-image {
-    height: 120px;
-    width: 120px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 6px;
+    transition: transform 0.5s ease;
+}
+
+.recipeItemContainer:hover .recipe-image {
+    transform: scale(1.05);
 }
 
 .right-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    padding: 16px;
     flex: 1;
-    padding-right: 30px;
-    /* Make room for the favorite button */
 }
 
 .drink-name {
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 6px;
-    color: #333;
+    margin-bottom: 8px;
+    color: var(--dark-text);
 }
 
 .drink-category {
-    font-size: 14px;
+    font-size: 12px;
     color: #777;
-    background-color: #f0ece8;
-    padding: 4px 8px;
-    border-radius: 4px;
+    background-color: #f5f5f5;
+    padding: 4px 10px;
+    border-radius: 30px;
     display: inline-block;
+    align-self: flex-start;
 }
 
 .favorite-button {
     position: absolute;
     top: 12px;
     right: 12px;
-    background: none;
+    background-color: rgba(255, 255, 255, 0.9);
     border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #999;
-    transition: color 0.3s ease;
-    padding: 5px;
-    z-index: 2;
-}
-
-.favorite-button:hover {
-    color: #f8c537;
-}
-
-.favorite-button.is-favorite {
-    color: #f8c537;
-}
-
-/* Make sure the button is visible against drink images */
-.favorite-button {
-    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
     width: 36px;
     height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-icon {
+    width: 20px;
+    height: 20px;
+    color: #ccc;
+    transition: all 0.3s ease;
+}
+
+.favorite-button:hover .favorite-icon {
+    color: var(--primary-color);
+}
+
+.favorite-button.is-favorite .favorite-icon {
+    color: var(--primary-color);
+}
+
+body.dark-mode .recipeItemContainer {
+    box-shadow: var(--dark-shadow);
 }
 </style>
