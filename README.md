@@ -1,4 +1,4 @@
-# kochrezepte
+# Cocktail Search
 
 ## Project setup
 ```
