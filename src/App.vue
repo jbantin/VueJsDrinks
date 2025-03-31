@@ -1,30 +1,79 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <Header @theme-changed="handleThemeChange" />
+  <router-view />
 </template>
 
+<script>
+import Header from './components/Header.vue';
+
+export default {
+  components: { Header },
+  methods: {
+    handleThemeChange(isDarkMode) {
+      // You can do additional app-wide theme handling here if needed
+      console.log('Theme changed to:', isDarkMode ? 'dark' : 'light');
+    }
+  }
+}
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+/* Global dark mode styles */
+body {
+  transition: background-color 0.3s ease, color 0.2s ease;
 }
 
-nav {
-  padding: 30px;
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+body.dark-mode .search-input {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #444;
 }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+body.dark-mode .recipeItemContainer {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+body.dark-mode .drink-name {
+  color: #e0e0e0;
+}
+
+body.dark-mode .drink-category {
+  background-color: #333;
+  color: #bbb;
+}
+
+body.dark-mode .no-results,
+body.dark-mode .start-message {
+  background-color: #1e1e1e;
+  color: #bbb;
+}
+
+body.dark-mode header {
+  background-color: #333;
+}
+
+body.dark-mode .title {
+  color: #e0e0e0;
+}
+
+body.dark-mode .back-button {
+  color: #bbb;
+}
+
+body.dark-mode .badge {
+  background-color: #444;
+}
+
+body.dark-mode .drink-detail {
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .drink-header {
+  background-color: #252525;
 }
 </style>
