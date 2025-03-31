@@ -53,7 +53,6 @@ export default {
             if (!this.drink) return [];
 
             const ingredients = [];
-            // TheCocktailDB stores ingredients in numbered properties (strIngredient1, strIngredient2, etc.)
             for (let i = 1; i <= 15; i++) {
                 const ingredientName = this.drink[`strIngredient${i}`];
                 const measure = this.drink[`strMeasure${i}`];

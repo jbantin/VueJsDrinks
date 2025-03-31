@@ -48,16 +48,16 @@ export default {
   },
   methods: {
     handleSearch() {
-      // Handle search after a short delay to prevent too many API calls
+      //0.5 sec delay before feetching
       if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
       this.searchTimeout = setTimeout(() => {
         this.getDrinks(this.localSearchQuery);
-      }, 300);
+      }, 500);
     },
     async getDrinks(query = '') {
-      if (!query || query.length < 2) {
-        // Require at least 2 characters for search
+      if (!query) {
+
         this.drinks = [];
         return;
       }

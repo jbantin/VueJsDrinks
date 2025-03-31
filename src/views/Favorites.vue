@@ -62,7 +62,6 @@ export default {
             this.favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
         },
         updateFavorites(event) {
-            // If a drink was removed from favorites, refresh the list
             if (!event.isFavorite) {
                 this.loadFavorites();
             }
