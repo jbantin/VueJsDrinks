@@ -1,12 +1,16 @@
 <template>
     <div class="page-container">
-        <router-link :to="{ name: 'home' }" class="back-button">
-            &larr; Back to Search
-        </router-link>
-
+       
         <div class="drink-detail" v-if="drink">
             <div class="drink-header">
-                <img :src="drink.strDrinkThumb" alt="Cocktail Picture" class="drink-image">
+                <div class="image-container">
+                    <img :src="drink.strDrinkThumb" alt="Cocktail Picture" class="drink-image">
+                    <button @click="toggleFavorite" class="favorite-button" :class="{ 'is-favorite': isFavorite }">
+                        <svg class="favorite-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                    </button>
+                </div>
                 <div class="drink-title">
                     <h1>{{ drink.strDrink }}</h1>
                     <div class="drink-meta">
@@ -45,7 +49,8 @@ export default {
     name: "DrinkDetail",
     data() {
         return {
-            drink: null
+            drink: null,
+            isFavorite: false
         }
     },
     computed: {
@@ -80,10 +85,41 @@ export default {
                 const data = await response.json();
                 if (data.drinks && data.drinks.length > 0) {
                     this.drink = data.drinks[0];
+                    // Check if this drink is already in favorites
+                    this.checkIfFavorite();
                 }
             } catch (error) {
                 console.error('Error fetching drink details:', error);
             }
+        },
+        checkIfFavorite() {
+            if (!this.drink) return;
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            this.isFavorite = favorites.some(fav => fav.idDrink === this.drink.idDrink);
+        },
+        toggleFavorite() {
+            if (!this.drink) return;
+            
+            this.isFavorite = !this.isFavorite;
+
+            // Get existing favorites from localStorage
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+            if (this.isFavorite) {
+                // Add to favorites if not already there
+                if (!favorites.some(fav => fav.idDrink === this.drink.idDrink)) {
+                    favorites.push(this.drink);
+                }
+            } else {
+                // Remove from favorites
+                const index = favorites.findIndex(fav => fav.idDrink === this.drink.idDrink);
+                if (index !== -1) {
+                    favorites.splice(index, 1);
+                }
+            }
+
+            // Save updated favorites back to localStorage
+            localStorage.setItem('favorites', JSON.stringify(favorites));
         }
     }
 }
@@ -185,5 +221,50 @@ export default {
     text-align: center;
     padding: 40px;
     color: #777;
+}
+.image-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.drink-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.favorite-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-icon {
+    width: 20px;
+    height: 20px;
+    color: #ccc;
+    transition: all 0.3s ease;
+}
+
+.favorite-button:hover .favorite-icon {
+    color: var(--primary-color, #e53935);
+}
+
+.favorite-button.is-favorite .favorite-icon {
+    color: var(--primary-color, #e53935);
 }
 </style>
